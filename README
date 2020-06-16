@@ -1,0 +1,81 @@
+
+
+django - exploration notes
+-------------------------------
+
+setup -
+-----------------------------------
+
+add routes & register app
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#. register your app (which is the folder containing migration, apps, models, etc *not* the site one)
+    #. in mysite/urls.py. Then add `path('django_demo_00/', include('django_demo_00.urls'))` to the `url_patterns` variable.
+#. `myapp` also needs a urls.py file
+    #. copy that from the site's one (PC doesn't include one by default for some reason)
+    #. add `path('/', views.index, name='index'),` to `urlpatterns`
+    #. e.g. `path('url/to/endpoint', views.endpoint_handler_method, name='somename')`
+#. `views.py` needs an handler as per defined in `myapp/urls.py`
+    #. add a `def myenpoint(rsqt)` similar to cherrypy
+    #. call the buzlogic to handle stuff, return a response etc.
+
+So essentially, 3 things to do: register your app in mysite/urls.py, register your endpoints in myapp/urls.py and create views (endpoint handlers) in myapp/views.py
+
+database setup
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* `mySite/settings.py` is useful here. not much to do if using the default db (sqlite3) but you could set a different backend.
+
+* need to add something like `django_app.apps.DjangoAppConfig` to your INSTALLED_APPS
+
+    * behavior of the app is defined in DjangoAppConfig (or whatever your app,s named)
+
+* `makemigrations`, `migrate`, and `sqlmigrate` - what's the difference?
+    * `makemigrations` creates the migration roadmap based on model changes since last migration
+    * `migrate` applies all those changes, to the DB (but potentially to other stuff for more advanced uses)
+    * `slqmigrate appname migration_number` prints the SQL that will be applied for a migration
+        * it needs an active DB connexion to resolve constraints
+        * it will NOT apply stuff
+        * needs to know for which app (appname) and a 000X number (the migration number)
+
+defining your model (and db schema)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#. this is done in models.py
+
+#. each class is a db table
+    #. each class attribute is a db field
+
+#. once all that is done, run `python manage.py makemigrations myapp`
+    #. this will build the migration details, that include all changes to the db schema
+    #. a new migrations will be under myapp/migrations/xxxx_mymigration.py
+    #. this migration details all that has changed since the last migration (or the firt mig if its the first).
+#. then run `python manage.py migration` to actually apply stuff
+
+
+
+the installed apps
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* these are things that django will "build" when you `python manage.py migrate` (& similar cmds)
+
+* eventually our app (when it has models defined) will be added to the `INSTALLED_APPS[]` list.
+
+quick useful cmds
+--------------------
+
+* `python manage.py runserver [port:8000]`
+
+* python
+
+gotchas, common error msg etc.
+------------------------------------------
+
+* when running the server or migrate: complaints about "duplicate label" is probably that you have  registered the application twice in the `INSTALLED_APPS`
+
+very high-lvl notes on django
+-----------------------------------------
+
+#. migrations (updates to the database) are done on a differential basis
+    #. this means that the sql generate for a migration assumes the previous state of the database is as expected based on the model evolution
+    #. deleting/moving/reformating the directory structure should be done with care, otherwise this may break the db
