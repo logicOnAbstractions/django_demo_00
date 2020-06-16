@@ -1,16 +1,15 @@
-from django.db import models
 
-# Create your models here.
+""" you could create all your model classes here.
 
-class Question(models.Model):
-    """ a model for django, which will define the DB schema.
-        * **class** attributes are db schema columns
-    """
+    however, if you want to stuff them in a subdir, then you can import those classes here instead, and move them whereever.
 
-    question_text       = models.CharField(max_length=200, default='hit me')              # mand. args max_length
-    pub_date            = models.DateTimeField('date published')
+    the point is that django **must** have a myapp/models.py file where all those classes are accessible (imported or defined) because it expects that rigig hierarchy.
+"""
 
-class Choice(models.Model):
-    question            = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text         = models.CharField(max_length=200, default='option 1')
-    votes               = models.IntegerField(default=0)
+
+
+from django_app.modeldir.dude import *
+from django_app.modeldir.choice import *
+from django_app.modeldir.question import *
+
+

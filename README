@@ -79,3 +79,8 @@ very high-lvl notes on django
 #. migrations (updates to the database) are done on a differential basis
     #. this means that the sql generate for a migration assumes the previous state of the database is as expected based on the model evolution
     #. deleting/moving/reformating the directory structure should be done with care, otherwise this may break the db
+
+#. django app are made to be REALLy small
+    #. think of them more as a single class than as a server application
+    #. from ` a blog post<https://justin.abrah.ms/this-and-that/fitures_model_subdir.html>`_, you should probably not NEED much to have a complex dir structure under myapp/models/[bunch of models classes]
+    #. from django's perspective, different apps should foces on a clear purpose and do just only that. if you need to more classes, you probably need more apps.
