@@ -53,6 +53,28 @@ defining your model (and db schema)
 #. then run `python manage.py migration` to actually apply stuff
 
 
+define the views (front end)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* views are defined in views.py. a few has a handler (method) in views.py that defines what happens
+
+* the views must be mapped to urlpatterns in myapp/urls.py. that allows each endpoint to know what to display/render whenever we get a some endpoint
+
+* templates are used to decouple the views and the http response.
+
+* a view returns a template, therefore we can easily chg/update a template without touching the code
+
+templates
+^^^^^^^^^^^^^^^^^^
+
+templates are managed in `myapp/templates/myapp/mypage.html`. **you do need to repeat the appname after /templates/**. this is django's linker that needs it to ensure proper matching of html & views. this only matters for a site with multiple apps (most sites will have multiple apps)
+
+steps to enable templates:
+
+#. create some `/django_app/templates/django_app/mypage.html` files. will contain jquery-like {{var.attribute}} syntax, with {% [ some python code ] %}
+#. update the endpoint treatement method in views.py, since we now want to return a certain template not directly the response
+#.
+
 
 the installed apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -61,12 +83,37 @@ the installed apps
 
 * eventually our app (when it has models defined) will be added to the `INSTALLED_APPS[]` list.
 
+the adminuser on db
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+* django has an admin setup/region to manage the db. **see how it compares with the integrated db management in pycharm - might just opt for that instead**
+
+creation of adminuser
++++++++++++++++++++++++++++++
+
+#. `python manage.py createsuperuser`
+    * will be some shell interactions, choose usernamer & password
+    * let,s default to username: admin, pass: sonjewer, email logiconabstractions
+#. to access the admin page:
+    * `python manage.py runserver`
+    * go to 0.0.0.0:8000/admin & login with prev. credentials
+#. adding stuff to manage
+    #. by default, our models elements (class of models.py) aren't included in the administratable area
+    #. to add them, need to register them in `myapp/admin.py`.
+    #. add a line admin.site.register(MyModelClass)
+    #. ultimately this is kind of a pgmyadmin with postgres
+
+**this feature is overall pretty cool and I wouldn't bother much with PC's integrated stuff. Except perhaps to run sql-lite cmds instead of using a UI.**
+
+
 quick useful cmds
 --------------------
 
 * `python manage.py runserver [port:8000]`
 
-* python
+* `python manage.py makemigrations`, `python manage.py sqlmigrate myapp 000x`
+
+* `python manage.py shell`  (interact with db/model live)
 
 gotchas, common error msg etc.
 ------------------------------------------
@@ -80,7 +127,7 @@ very high-lvl notes on django
     #. this means that the sql generate for a migration assumes the previous state of the database is as expected based on the model evolution
     #. deleting/moving/reformating the directory structure should be done with care, otherwise this may break the db
 
-#. django app are made to be REALLy small
+#. django app are meant to be REALLy small
     #. think of them more as a single class than as a server application
     #. from ` a blog post<https://justin.abrah.ms/this-and-that/fitures_model_subdir.html>`_, you should probably not NEED much to have a complex dir structure under myapp/models/[bunch of models classes]
     #. from django's perspective, different apps should foces on a clear purpose and do just only that. if you need to more classes, you probably need more apps.

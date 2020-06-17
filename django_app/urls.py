@@ -18,5 +18,12 @@ from django.urls import path
 
 # app_name = "django_app"
 urlpatterns = [
-    path('', views.index, name='index'),
+
+    # generic pattern: path([url], my_view, ??template_name?)
+
+    path('', views.index, name='index'),            # default landing page at /ROOT/django_app/
+    path('<int:question_id>', views.detail, name='detail'),                         # /django_app/42
+    path('<int:question_id>/results/', views.results, name='results'),              # /django_app/42/results
+    path('<int:question_id>/vote/', views.vote, name='vote'),                       # /django_app/42/vote
+
 ]

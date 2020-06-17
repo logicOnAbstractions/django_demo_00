@@ -1,2 +1,6 @@
 # Project exclude paths
 /venv/
+*.pyc
+__pychache__
+db.sqlite3
+/static

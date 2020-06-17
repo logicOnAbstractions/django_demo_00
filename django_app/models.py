@@ -3,7 +3,7 @@
 
     however, if you want to stuff them in a subdir, then you can import those classes here instead, and move them whereever.
 
-    the point is that django **must** have a myapp/models.py file where all those classes are accessible (imported or defined) because it expects that rigig hierarchy.
+    the point is that django **must** have a django_app/models.py file where all those classes are accessible (imported or defined) because it expects that rigig hierarchy.
 """
 
 

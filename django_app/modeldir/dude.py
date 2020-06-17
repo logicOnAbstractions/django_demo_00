@@ -9,3 +9,6 @@ class Dude(models.Model):
     first_name       = models.CharField(max_length=200, default='john')              # mand. args max_length
     last_name        = models.CharField(max_length=200, default='smith')
 
+
+    def __repr__(self):
+        return f"{self.first_name} {self.last_name}"
