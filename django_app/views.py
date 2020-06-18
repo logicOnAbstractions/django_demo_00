@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse        # django's HTTP, not std lib!
 from django.template import loader
+import logging
 
 """ Defines all the endpoints behavior here. similarly to cherrypy, you can (I think) use decorators, and then use those as entry-points for further actions at the endpoint.
 
@@ -12,6 +13,8 @@ from django.template import loader
 
 def index(request):
     """ syntaxic sugar: let's wrap the httpresponse mess into a method call  """
+
+    logging.getLogger('myproject.custom').error(f"CRACK BOOM HUE! WE'VE LOGGEDS STUFF!!!!!!111111111")
 
     from .models import Question
     from django.shortcuts import render
