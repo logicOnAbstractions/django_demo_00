@@ -46,11 +46,7 @@ def detail(request, question_id):
 
     from .models import Question
     from django.shortcuts import render, get_object_or_404
-
-
     question = get_object_or_404(Question, pk=question_id)      # we get ride of the try/except since its handled in the method for us
-    print(f"found question {question.question_text}")
-
     ctx = {'question':question}
     template_path           = 'django_app/detail.html'
     return render(request, template_path, ctx)
@@ -66,7 +62,6 @@ def detail_v1(request, question_id):
 
     try:
         question = Question.objects.get(pk=question_id)                 # try to find in datamodel (db) an object with our current id, question_id
-        print(f"found question {question.question_text}")
     except Question.DoesNotExist:
         raise Http404(f"oups, that didn't work out well...")
     ctx = {'question':question}
