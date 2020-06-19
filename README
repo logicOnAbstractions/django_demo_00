@@ -15,11 +15,11 @@ add routes & register app
     #. copy that from the site's one (PC doesn't include one by default for some reason)
     #. add `path('/', views.index, name='index'),` to `urlpatterns`
     #. e.g. `path('url/to/endpoint', views.endpoint_handler_method, name='somename')`
-#. `views.py` needs an handler as per defined in `myapp/urls.py`
+#. `views.py` needs an handler as defined in `myapp/urls.py`
     #. add a `def myenpoint(rsqt)` similar to cherrypy
     #. call the buzlogic to handle stuff, return a response etc.
 
-So essentially, 3 things to do: register your app in mysite/urls.py, register your endpoints in myapp/urls.py and create views (endpoint handlers) in myapp/views.py
+So essentially, 3 things to do: register your app in mysite/urls.py, register your app's endpoints in myapp/urls.py and create views (endpoint handlers) in myapp/views.py
 
 database setup
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,7 +32,7 @@ database setup
 
 * `makemigrations`, `migrate`, and `sqlmigrate` - what's the difference?
     * `makemigrations` creates the migration roadmap based on model changes since last migration
-    * `migrate` applies all those changes, to the DB (but potentially to other stuff for more advanced uses)
+    * `migrate` applies all those changes, to the DB (but potentially to other stuff like auth etc. if anything changed there)
     * `slqmigrate appname migration_number` prints the SQL that will be applied for a migration
         * it needs an active DB connexion to resolve constraints
         * it will NOT apply stuff
@@ -56,9 +56,9 @@ defining your model (and db schema)
 define the views (front end)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* views are defined in views.py. a few has a handler (method) in views.py that defines what happens
+* views are defined in views.py. a view has a handler (method) in views.py that defines what happens
 
-* the views must be mapped to urlpatterns in myapp/urls.py. that allows each endpoint to know what to display/render whenever we get a some endpoint
+* the views must be mapped to urlpatterns in myapp/urls.py. that allows each endpoint to know what to display/render at .../myapp/myendpoint/
 
 * templates are used to decouple the views and the http response.
 
@@ -73,7 +73,46 @@ steps to enable templates:
 
 #. create some `/django_app/templates/django_app/mypage.html` files. will contain jquery-like {{var.attribute}} syntax, with {% [ some python code ] %}
 #. update the endpoint treatement method in views.py, since we now want to return a certain template not directly the response
-#.
+#. they are one of the options for front-end with django. Within django, jinja2 also exists
+#. don't allow users to directly submit templates - templates can use other templates( risks of xss attackts etc.)
+
+loading a template
+++++++++++++++++++++++
+
+in an endpoint in `views.py`,  a few ways to get/open/load a template with the engine:
+
+#. get_template(tplt_name)
+    #. given a template name, finds it in TEMPLATE["DIRS"]
+    #. parse it each templating engines
+#. select_template(tplt_name_list)
+    #. provide one or many tplt names inthe list
+    #. returns the first that,s successfully parsed by engine
+    #. allows u to provide fallback options (if error etc.)
+
+
+
+
+what's a template
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+* it's written in *django's teamplate language*.
+* you can extend it
+* the `philosophy <https://docs.djangoproject.com/en/3.0/ref/templates/language/#the-django-template-language>`_ behind the template language:
+    * making people edit xml is "sadistic" according to docs
+    * meant to express presentation, not program logic
+    * it doesn't execute arbitrary python code
+    * it's *not* a straight processing of {{% python-ish code %}} within tags in an html file
+    * it can be extended
+
+
+logging stuff
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* django initiates its logs pretty early in the launch
+
+* logs shoulds be initiated in settings.py, so that they are available as soon as possible @ startup
+
+* my current setup closerly follows the `documentation <https://docs.djangoproject.com/en/3.0/topics/logging/#examples>`_. Use defaults as much as possible, need to nerd basis. I have basic logging, including the django specific stuff, so I'm happy.
 
 
 the installed apps

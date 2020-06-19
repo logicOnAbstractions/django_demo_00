@@ -15,8 +15,9 @@ Including another URLconf
 """
 from . import views
 from django.urls import path
+import os
 
-# app_name = "django_app"
+app_name = "django_app"
 urlpatterns = [
 
     # generic pattern: path([url], my_view, ??template_name?)
@@ -25,5 +26,8 @@ urlpatterns = [
     path('<int:question_id>/', views.detail, name='detail'),                         # /django_app/42/
     path('<int:question_id>/results/', views.results, name='results'),              # /django_app/42/results/
     path('<int:question_id>/vote/', views.vote, name='vote'),                       # /django_app/42/vote/
+
+    # messing around with templates
+    path('template', views.template, name='base'),                       # /django_app/template/, will return the base.html in templates/django_app/
 
 ]

@@ -14,7 +14,7 @@ import os
 from django_demo_00.utils import get_logs_configs
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))          # myproj/
 
 
 # Quick-start development settings - unsuitable for production
@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 
 ############# LOGGING. see https://docs.djangoproject.com/en/3.0/topics/logging/#examples. as well as SO Q-1598823 for details
 
-LOGGING = get_logs_configs()
+LOGGING = get_logs_configs(base_dir = BASE_DIR)
 
 
 
@@ -65,10 +65,11 @@ ROOT_URLCONF = 'django_demo_00.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
-        'APP_DIRS': True,
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',           # backend: the engine that renders the backend. e.g. django's dtl engine, or jinja2, etc.
+        # 'BACKEND': 'django.template.backends.jinja2.Jinja2.',                 # call to use jinja2 instead of dtl
+
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],                          # search order the engine traverses for template sources files, /myproj/templates
+        'APP_DIRS': True,                                                       # whether to look for templates in app_dirs ????
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',

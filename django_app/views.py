@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse        # django's HTTP, not std lib!
 from django.template import loader
 import logging
+from django_demo_00.utils import *
 
 """ Defines all the endpoints behavior here. similarly to cherrypy, you can (I think) use decorators, and then use those as entry-points for further actions at the endpoint.
 
@@ -9,12 +10,10 @@ import logging
     
     * the urlpattern also defines the question_id argument. see django_app/urls.py for detail 
 """
-
+logger = logging.getLogger(CUSTOME_LOGGERNAME)
 
 def index(request):
     """ syntaxic sugar: let's wrap the httpresponse mess into a method call  """
-
-    logging.getLogger('myproject.custom').error(f"CRACK BOOM HUE! WE'VE LOGGEDS STUFF!!!!!!111111111")
 
     from .models import Question
     from django.shortcuts import render
@@ -23,6 +22,8 @@ def index(request):
     print(latest_question_list)
     template_path           = 'django_app/index.html'
     ctx                     = {'latest_question_list':latest_question_list}
+
+    logger.info(f"Just saying django_app/views.py index received a call... ")
     return render(request, template_path, ctx)              # thus we don't need to import Httpresponse & such anymore
 
 def index_v1(request):
@@ -52,6 +53,9 @@ def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)      # we get ride of the try/except since its handled in the method for us
     ctx = {'question':question}
     template_path           = 'django_app/detail.html'
+
+    logger.info(f"Just saying django_app/views.py detail received a call... Going for a fancy template usage here.  ")
+
     return render(request, template_path, ctx)
 
 def detail_v1(request, question_id):
@@ -90,3 +94,8 @@ def vote(request, question_id ):
     """ """
 
     return HttpResponse(f"you're voting on question: {question_id}")
+
+def template(request):
+    """ returning our very own base template to show functionnality in django"""
+
+    return render(request, 'django_app/base.html', {'title':"title set in views.template(rqst)", "foo":"this is the foo variable"})

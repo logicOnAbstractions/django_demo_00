@@ -1,7 +1,13 @@
 """ common methods & csts that may be useful somewhere else as well """
 # import logging
+import os
 
-def get_logs_configs():
+LOGDIR      = "logs"
+LOGFILENAME = "main_logs.log"
+CUSTOME_LOGGERNAME  = "mylogger"
+DJANGOFILE_LOGGERNAME  = "django_file"
+
+def get_logs_configs(base_dir):
     """ configures the logs. logs should be setup from settings.py in django.
 
         a logger has 4 parts (at most): logger, handler, filter, formatter. 2 main ways of organising logs:
@@ -11,6 +17,9 @@ def get_logs_configs():
         * with logging.getLogger('project.somemodule.someotherthing'): this is a hierarchical naming
 
     """
+    filename = os.path.join(base_dir, LOGDIR, LOGFILENAME)
+    filename_django = os.path.join(base_dir, LOGDIR, DJANGOFILE_LOGGERNAME)
+
     # from the doc - adapted slightly & commented
     LOGGING = {
         'version': 1,                               # python's logging module. currently only 1 version schema, but this will allow for backward compatibility easily
@@ -49,14 +58,23 @@ def get_logs_configs():
                 'level':'INFO',
                 'class': 'logging.handlers.RotatingFileHandler',
                 'formatter': 'verbose',
-                'filename': 'test_logs.log',
-                # 'maxBytes': 1e7,
-                # 'backupCount':3,
+                'filename': filename,
+                'maxBytes': 1e7,
+                'backupCount':3,
+            },
+
+            'file_django': {
+                'level': 'INFO',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'formatter': 'verbose',
+                'filename': filename_django,
+                'maxBytes': 1e7,
+                'backupCount': 3,
             }
         },
         'loggers': {
             'django': {
-                'handlers': ['console'],
+                'handlers': ['console', 'file_django'],
                 'propagate': True,
             },
             'django.request': {
@@ -64,7 +82,7 @@ def get_logs_configs():
                 'level': 'ERROR',
                 'propagate': False,
             },
-            'myproject.custom': {
+            CUSTOME_LOGGERNAME: {
                 'handlers': ['console', 'file'],
                 'level': 'DEBUG',
             }
